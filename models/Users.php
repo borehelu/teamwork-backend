@@ -62,6 +62,9 @@ class Users{
         $this->secret=htmlspecialchars(strip_tags($this->secret));
 
 
+        // hash the password before saving to database
+	    $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+
         // bind values
         $stmt->bindParam(":firstName", $this->firstName);
         $stmt->bindParam(":lastName", $this->lastName);
@@ -85,70 +88,70 @@ class Users{
 
     }
 
-    function update(){
+//     function update(){
   
-        // update query
-        $query = "UPDATE
-                    " . $this->tableName . "
-                SET
-                    mealName=:name,
-                    mealPrice=:price,
-                    mealDescription=:description,
-                    mealCategoryId=:category_id,
-                    mealImage=:mealImage,
-                    mealStatus=:mealStatus
-                WHERE
-                    mealId = :id";
+//         // update query
+//         $query = "UPDATE
+//                     " . $this->tableName . "
+//                 SET
+//                     mealName=:name,
+//                     mealPrice=:price,
+//                     mealDescription=:description,
+//                     mealCategoryId=:category_id,
+//                     mealImage=:mealImage,
+//                     mealStatus=:mealStatus
+//                 WHERE
+//                     mealId = :id";
         
-            // prepare query statement
-            $stmt = $this->conn->prepare($query);
+//             // prepare query statement
+//             $stmt = $this->conn->prepare($query);
         
-            // sanitize
-            $this->mealName=htmlspecialchars(strip_tags($this->mealName));
-            $this->mealPrice=htmlspecialchars(strip_tags($this->mealPrice));
-            $this->mealDescription=htmlspecialchars(strip_tags($this->mealDescription));
-            $this->mealCategoryId=htmlspecialchars(strip_tags($this->mealCategoryId));
-            $this->mealImage=htmlspecialchars(strip_tags($this->mealImage));
-            $this->mealStatus=htmlspecialchars(strip_tags($this->mealStatus));
-            $this->mealId=htmlspecialchars(strip_tags($this->mealId));
+//             // sanitize
+//             $this->mealName=htmlspecialchars(strip_tags($this->mealName));
+//             $this->mealPrice=htmlspecialchars(strip_tags($this->mealPrice));
+//             $this->mealDescription=htmlspecialchars(strip_tags($this->mealDescription));
+//             $this->mealCategoryId=htmlspecialchars(strip_tags($this->mealCategoryId));
+//             $this->mealImage=htmlspecialchars(strip_tags($this->mealImage));
+//             $this->mealStatus=htmlspecialchars(strip_tags($this->mealStatus));
+//             $this->mealId=htmlspecialchars(strip_tags($this->mealId));
         
-            // bind new values
-            $stmt->bindParam(':id', $this->mealId);
-            $stmt->bindParam(":name", $this->mealName);
-            $stmt->bindParam(":price", $this->mealPrice);
-            $stmt->bindParam(":description", $this->mealDescription);
-            $stmt->bindParam(":mealImage", $this->mealImage);
-            $stmt->bindParam(":category_id", $this->mealCategoryId);
-            $stmt->bindParam(":mealStatus", $this->mealStatus);
+//             // bind new values
+//             $stmt->bindParam(':id', $this->mealId);
+//             $stmt->bindParam(":name", $this->mealName);
+//             $stmt->bindParam(":price", $this->mealPrice);
+//             $stmt->bindParam(":description", $this->mealDescription);
+//             $stmt->bindParam(":mealImage", $this->mealImage);
+//             $stmt->bindParam(":category_id", $this->mealCategoryId);
+//             $stmt->bindParam(":mealStatus", $this->mealStatus);
     
-            // execute the query
-            if($stmt->execute()){
-                return true;
-            }
-                return false;
-}
-            // delete the product
-            function delete(){
+//             // execute the query
+//             if($stmt->execute()){
+//                 return true;
+//             }
+//                 return false;
+// }
+//             // delete the product
+//             function delete(){
 
-                    // delete query
-                    $query = "DELETE FROM " . $this->tableName . " WHERE customer = ?";
+//                     // delete query
+//                     $query = "DELETE FROM " . $this->tableName . " WHERE customer = ?";
                 
-                    // prepare query
-                    $stmt = $this->conn->prepare($query);
+//                     // prepare query
+//                     $stmt = $this->conn->prepare($query);
                 
-                    // sanitize
-                    $this->mealId=htmlspecialchars(strip_tags($this->mealId));
+//                     // sanitize
+//                     $this->mealId=htmlspecialchars(strip_tags($this->mealId));
                 
-                    // bind id of record to delete
-                    $stmt->bindParam(1, $this->mealId);
+//                     // bind id of record to delete
+//                     $stmt->bindParam(1, $this->mealId);
                 
-                    // execute query
-                    if($stmt->execute()){
-                        return true;
-                    }
+//                     // execute query
+//                     if($stmt->execute()){
+//                         return true;
+//                     }
                 
-                    return false;
-            }
+//                     return false;
+//             }
 
 
 }
