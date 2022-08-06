@@ -63,8 +63,8 @@ class Users{
 
 
         // hash the password before saving to database
-	    $password = password_hash($this->password, PASSWORD_BCRYPT);
-        
+	    $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+
         // bind values
         $stmt->bindParam(":firstName", $this->firstName);
         $stmt->bindParam(":lastName", $this->lastName);
