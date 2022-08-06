@@ -7,44 +7,59 @@
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         
         include_once '../../config/Database.php';
-        include_once '../../models/Customer.php';
+        include_once '../../models/Users.php';
+        include_once '../../models/utils.php';
+        include_once '../../libs/password/passwordLib.php';
 
         $database = new Database();
         $conn = $database->connect();
 
-        $customer = new Customer($conn);
+        $user = new Users($conn);
+        $utils = new Utils();
 
         // get posted data
         $data = json_decode(file_get_contents("php://input"));
         
         // make sure data is not empty
         if(
-            !empty($data->name) &&
+            !empty($data->firstName) &&
+            !empty($data->lastName) &&
             !empty($data->email) &&
-            !empty($data->phone) &&
-            !empty($data->address) &&
-            !empty($data->image) &&
             !empty($data->password) &&
-            !empty($data->status)
+            !empty($data->gender) &&
+            !empty($data->jobRole) &&
+            !empty($data->departmentId) &&
+            !empty($data->address) &&
+            !empty($data->avatarUrl) &&
+            !empty($data->userRole)
+            
         ){
         
-            // set product property values
-            $customer->customerFullname = $data->name;
-            $customer->customerEmail = $data->email;
-            $customer->customerPhone = $data->phone;
-            $customer->customerAddress = $data->address;
-            $customer->customerImage = $data->image;
-            $customer->customerPassword = $data->password;
-            $customer->accountStatus = $data->status;
+            
+            $user->firstName = $data->firstName;
+            $user->lastName = $data->lastName;
+            $user->email = $data->email;
+            $user->password = $data->password;
+            $user->gender = $data->gender;
+            $user->jobRole = $data->jobRole;
+            $user->departmentId = $data->departmentId;
+            $user->address = $data->address;
+            $user->avatarUrl = $data->avatarUrl;
+            $user->userRole = $data->userRole;
+
+            // generate access token for user
+            $user->secret=$utils->getToken();
         
-            // create the customer
-            if($customer->create()){
+            // create the user
+            if($user->addUser()){
         
                 // set response code - 201 created
                 http_response_code(201);
+
+                $payload = array("message"=>"User account successfully created","token"=>$user->secret,"userId"=>$conn->lastInsertId());
         
                 // tell the user
-                echo json_encode(array("message" => "Customer was successfuly added."));
+                echo json_encode(array("status"=>"success","data" => $payload));
             }
         
             // if unable to create the product, tell the user
@@ -54,7 +69,7 @@
                 http_response_code(503);
         
                 // tell the user
-                echo json_encode(array("message" => "Unable to add customer."));
+                echo json_encode(array("status"=>"error","error" => "Unable to add user."));
             }
         }
         
@@ -65,5 +80,5 @@
             http_response_code(400);
         
             // tell the user
-            echo json_encode(array("message" => "Unable to add customer. Data is incomplete."));
+            echo json_encode(array("status"=>"error","error" => "Unable to add user."));
         }
