@@ -88,6 +88,49 @@ class Users{
 
     }
 
+    function emailExists(){
+        $query = "SELECT * FROM " .$this.tableName." WHERE email = :email";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":email", $this->email);
+
+        $stmt->execute();
+
+        // get number of rows
+		$num = $stmt->rowCount();
+
+		// if email exists, assign values to object properties for easy access and use for php sessions
+		if($num>0){
+			// get record details / values
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			// assign values to object properties
+			$this->id = $row['id'];
+            $user->firstName = $row["firstName"];
+            $user->lastName = $row["lastName"];
+            $user->email = $row["email"];
+            $user->gender = $row["gender"];
+            $user->jobRole = $row["jobRole"];
+            $user->departmentId = $row["departmentId"];
+            $user->address = $row["address"];
+            $user->avatarUrl = $row["avatarUrl"];
+            $user->userRole = $row["userRole"];
+			
+
+			// return true because email exists in the database
+			return true;
+		}
+
+      // return false if email does not exist in the database
+      return false;
+	}
+
+
+
+
+    }
+
 //     function update(){
   
 //         // update query
@@ -154,4 +197,3 @@ class Users{
 //             }
 
 
-}
