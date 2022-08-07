@@ -122,6 +122,39 @@ class Posts{
 
       }
 
+
+      public function readAllPosts(){
+        // query select all classes
+        $query = "SELECT *
+        FROM " . $this->tableName . " ORDER BY createdOn";
+    
+        // prepare query statement
+        $stmt = $this->conn->prepare( $query );
+    
+        // execute query
+        $stmt->execute();
+    
+        // return values
+        return $stmt;
+        }
+      
+        public function readOnePost(){
+            // query select all classes
+            $query = "SELECT *
+            FROM " . $this->tableName . "WHERE id = :id ORDER BY createdOn";
+        
+            // prepare query statement
+            $stmt = $this->conn->prepare( $query );
+
+            $stmt->bindParam(":id", $this->id);
+        
+            // execute query
+            $stmt->execute();
+        
+            // return values
+            return $stmt;
+            }
+
       
 
     
