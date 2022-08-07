@@ -140,16 +140,21 @@
             $payload = array();
 
             if(!empty($_GET["id"])){
-                $stmt = $post->readAllPosts();
+                $stmt = $post->readOnePost($_GET["id"]);
 
                 if($stmt->rowCount() > 0 ){
                     extract($row = $stmt->fetch(PDO::FETCH_ASSOC));
                     if($postType == 1){
-                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"imageUrl"=>$home_url . "uploads/{$image}","authorId"=>$userId,"comments"=>$comments->readAllComments($_GET["id"]));
+                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"imageUrl"=>$home_url . "uploads/{$image}","authorId"=>$userId,"comments"=>$comment->readAllComments($_GET["id"]));
 
                     }else{
-                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"article"=>$article,"authorId"=>$userId,"comments"=>$comments->readAllComments($_GET["id"]));
+                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"article"=>$article,"authorId"=>$userId,"comments"=>$comment->readAllComments($_GET["id"]));
                     }
+                }else{
+                     // tell the user
+                echo json_encode(array("status"=>"error","data" => array("message"=>"No data found")));
+ 
+                exit;
                 }
 
 

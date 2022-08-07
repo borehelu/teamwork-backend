@@ -138,21 +138,21 @@ class Posts{
         return $stmt;
         }
       
-        public function readOnePost(){
+        public function readOnePost($id){
             // query select all classes
-            $query = "SELECT *
-            FROM " . $this->tableName . "WHERE id = :id ORDER BY createdOn";
+            $query = "SELECT * FROM " . $this->tableName . " WHERE id = :id ORDER BY createdOn";
         
             // prepare query statement
             $stmt = $this->conn->prepare( $query );
 
-            $stmt->bindParam(":id", $this->id);
+            $stmt->bindParam(":id", $id);
         
             // execute query
             $stmt->execute();
         
             // return values
             return $stmt;
+
             }
 
             function deletePost(){

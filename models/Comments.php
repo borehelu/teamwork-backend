@@ -61,14 +61,12 @@ class Comments{
 
     }
 
-
-        
-
-
       
 
 
       public function readAllComments($postId){
+
+
         // query select all classes
         $query = "SELECT * FROM " . $this->tableName . " WHERE postId = :postId ORDER BY createdOn";
     
@@ -84,7 +82,7 @@ class Comments{
         if($stmt->rowCount() > 0 ){
             $comments = array();
 
-            while($row = $stmt->fetch("PDO::FETCH_ASSOC")){
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
                  $comments[] = array("commentId"=>$id,"comment"=>$comment, "authorId"=>$userId, "createdOn"=>$createdOn);
 
@@ -96,44 +94,6 @@ class Comments{
             return array();
         }
         }
-      
-        public function readOnePost(){
-            // query select all classes
-            $query = "SELECT *
-            FROM " . $this->tableName . "WHERE id = :id ORDER BY createdOn";
-        
-            // prepare query statement
-            $stmt = $this->conn->prepare( $query );
-
-            $stmt->bindParam(":id", $this->id);
-        
-            // execute query
-            $stmt->execute();
-        
-            // return values
-            return $stmt;
-            }
-
-            function deletePost(){
-
-                // delete query
-                $query = "DELETE FROM " . $this->tableName . " WHERE id = ?";
-        
-                // prepare query statement
-                $stmt = $this->conn->prepare($query);
-        
-                // bind record id
-                $stmt->bindParam(1, $this->id);
-                
-        
-                // execute the query
-                if($result = $stmt->execute()){
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-
       
 
     
