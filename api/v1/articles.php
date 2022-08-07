@@ -9,16 +9,58 @@
         include_once '../../config/core.php';
         include_once '../../config/Database.php';
         include_once '../../models/Posts.php';
+        include_once '../../models/Comments.php';
         include_once '../../models/utils.php';
+        include_once '../../models/Users.php';
+
 
         $database = new Database();
         $conn = $database->connect();
 
         $post = new Posts($conn);
+        $user = new Users($conn);
+        $comment = new Comments($conn);
         $utils = new Utils();
+
+        $access_token = null;
+
+        foreach(getallheaders() as $name => $value){
+            if($name == "token" && $user->getUserIdFromToken($value) != null){
+                $access_token = $value;
+            }
+        }
+
+      
+
+
+
+        if($access_token != null){
 
 
         if($_SERVER['REQUEST_METHOD'] == "POST"){
+
+            if(!empty($_GET["postId"])){
+
+                $comment->postId = $_GET["postId"];
+                $comment->userId = $user->getUserIdFromToken($access_token);
+                $comment->comment = $_POST["comment"];
+
+                if($comment->addComment()){
+
+                    $payload = array("message"=>"Comment successfully added");
+                    echo json_encode(array("status"=>"success","data" => $payload));
+                    exit;
+
+                }else{
+
+                    $payload = array("message"=>"Error adding comment");
+                    echo json_encode(array("status"=>"error","data" => $payload));
+                    exit;
+                }
+
+            }
+
+
               // make sure data is not empty
             if( !empty($_POST["title"]) && !empty($_POST["userId"])){
                 $post->userId = $_POST["userId"];
@@ -38,7 +80,7 @@
                 
                         // tell the user
                         echo json_encode(array("status"=>"success","data" => $payload));
-            
+                        exit;
 
                     }else{
                             // set response code - 503 service unavailable
@@ -47,6 +89,7 @@
                             // tell the user
                             echo json_encode(array("status"=>"error","error" => "Unable to add post."));
 
+                            exit;
                     }
 
 
@@ -64,7 +107,7 @@
                     
                             // tell the user
                             echo json_encode(array("status"=>"success","data" => $payload));
-            
+                        exit;
 
                     }else{
                         // set response code - 503 service unavailable
@@ -72,6 +115,7 @@
                     
                             // tell the user
                             echo json_encode(array("status"=>"error","error" => "Unable to add post."));
+                            exit;
                     }
                 }
             
@@ -88,6 +132,7 @@
             
                 // tell the user
                 echo json_encode(array("status"=>"error","error" => "Unable to add post. Incomplete entries."));
+                exit;
             }
 
         }elseif ($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -138,7 +183,7 @@
                 // tell the user
                 echo json_encode(array("status"=>"success","data" => $payload));
  
-                
+                exit;
                 
         }elseif (!empty($_GET["id"]) && $_SERVER['REQUEST_METHOD'] == "DELETE") {
             
@@ -147,17 +192,24 @@
 
                 $payload = array("message"=>"Post successfully deleted");
                 echo json_encode(array("status"=>"success","data" => $payload));
+                exit;
 
             }else{
                 $payload = array("message"=>"Error deleting post");
                 echo json_encode(array("status"=>"error","data" => $payload));
+                exit;
             }
             
             
             
             
         }
-        
+    }else{
+
+        echo json_encode(array("status"=>"error","data" => array("message" => "Authentication error")));
+        exit;
+
+    }
 
        
         

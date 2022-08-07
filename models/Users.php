@@ -128,6 +128,34 @@ class Users{
       return false;
 	}
 
+    function getUserIdFromToken($token){
+        $query = "SELECT id FROM users WHERE secret = :secret";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":secret", $token);
+
+        $stmt->execute();
+
+        // get number of rows
+		$num = $stmt->rowCount();
+
+		// if email exists, assign values to object properties for easy access and use for php sessions
+		if($num>0){
+			// get record details / values
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            extract($row);
+
+            return $id;
+
+		}else{
+            return null;
+        }
+
+      
+	}
+
 
 
 
