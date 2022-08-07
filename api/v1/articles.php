@@ -20,7 +20,7 @@
 
         if($_SERVER['REQUEST_METHOD'] == "POST"){
               // make sure data is not empty
-            if( !empty($_POST["title"]) ){
+            if( !empty($_POST["title"]) && !empty($_POST["userId"])){
                 $post->userId = $_POST["userId"];
                 $post->title = $_POST["title"];
 
@@ -140,6 +140,22 @@
  
                 
                 
+        }elseif (!empty($_GET["id"]) && $_SERVER['REQUEST_METHOD'] == "DELETE") {
+            
+            $post->id = $_GET["id"];
+            if($post->deletePost()){
+
+                $payload = array("message"=>"Post successfully deleted");
+                echo json_encode(array("status"=>"success","data" => $payload));
+
+            }else{
+                $payload = array("message"=>"Error deleting post");
+                echo json_encode(array("status"=>"error","data" => $payload));
+            }
+            
+            
+            
+            
         }
         
 

@@ -155,6 +155,26 @@ class Posts{
             return $stmt;
             }
 
+            function deletePost(){
+
+                // delete query
+                $query = "DELETE FROM " . $this->tableName . " WHERE id = ?";
+        
+                // prepare query statement
+                $stmt = $this->conn->prepare($query);
+        
+                // bind record id
+                $stmt->bindParam(1, $this->id);
+                
+        
+                // execute the query
+                if($result = $stmt->execute()){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+
       
 
     
