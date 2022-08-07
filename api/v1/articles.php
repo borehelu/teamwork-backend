@@ -86,13 +86,14 @@
 
 
               // make sure data is not empty
-            if( !empty($data->title) && !empty($data->userId)){
-                $post->userId = $data->userId;
-                $post->title = $data->title;
+            if( (!empty($data->title) && !empty($data->userId)) || ((!empty($_POST["title"]) && !empty($_POST["userId"])))){
+              
+                $post->userId = (!empty($data->userId))? $data->userId: $_POST['userId'];
+                $post->title = (!empty($data->title))? $data->title: $_POST['title'];
 
-                if(!empty($data->article)){
+                if(!empty($data->article) || !empty($_POST["article"]) ){
                     $post->postType = 0;
-                    $post->article = $data->article;
+                    $post->article = (!empty($data->article))? $data->article: $_POST["article"];
                     
 
                     if($post->addPost()){
@@ -118,6 +119,7 @@
 
 
                 }else{
+                   
                     $post->postType = 1;
                     $post->image = $utils->getToken();
                     $post->uploadImage();
