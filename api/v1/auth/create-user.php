@@ -18,34 +18,36 @@
         $user = new Users($conn);
         $utils = new Utils();
 
-       
-        
-        // make sure data is not empty
+        $data = json_decode(file_get_contents('php://input'));
+
+        if($_SERVER['REQUEST_METHOD'] == "POST"){
+
+             // make sure data is not empty
         if(
-            !empty($_POST["firstName"]) &&
-            !empty($_POST["lastName"]) &&
-            !empty($_POST["email"]) &&
-            !empty($_POST["password"]) &&
-            !empty($_POST["gender"]) &&
-            !empty($_POST["jobRole"]) &&
-            !empty($_POST["departmentId"]) &&
-            !empty($_POST["address"]) &&
-            !empty($_POST["avatarUrl"]) &&
-            !empty($_POST["userRole"])
+            !empty($data->firstName) &&
+            !empty($data->lastName) &&
+            !empty($data->email) &&
+            !empty($data->password) &&
+            !empty($data->gender) &&
+            !empty($data->jobRole) &&
+            !empty($data->departmentId) &&
+            !empty($data->address) &&
+            !empty($data->avatarUrl) &&
+            !empty($data->userRole)
             
         ){
         
             
-            $user->firstName = $_POST["firstName"];
-            $user->lastName = $_POST["lastName"];
-            $user->email = $_POST["email"];
-            $user->password = $_POST["password"];
-            $user->gender = $_POST["gender"];
-            $user->jobRole = $_POST["jobRole"];
-            $user->departmentId = $_POST["departmentId"];
-            $user->address = $_POST["address"];
-            $user->avatarUrl = $_POST["avatarUrl"];
-            $user->userRole = $_POST["userRole"];
+            $user->firstName = $data->firstName;
+            $user->lastName = $data->lastName;
+            $user->email = $data->email;
+            $user->password = $data->password;
+            $user->gender = $data->gender;
+            $user->jobRole = $data->jobRole;
+            $user->departmentId = $data->departmentId;
+            $user->address = $data->address;
+            $user->avatarUrl = $data->avatarUrl;
+            $user->userRole = $data->userRole;
 
             // generate access token for user
             $user->secret=$utils->getToken();
@@ -82,3 +84,9 @@
             // tell the user
             echo json_encode(array("status"=>"error","error" => "Unable to add user. Incomplete entries."));
         }
+
+        }
+
+       
+        
+       

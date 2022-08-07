@@ -30,20 +30,17 @@
             }
         }
 
+        $data = json_decode(file_get_contents('php://input'));
       
 
 
 
         if($access_token != null){
 
-            if($_SERVER['REQUEST_METHOD'] == "PATCH" && !empty($_GET["id"])){
-                // Takes raw data from the request
-                $json = file_get_contents('php://input');
+            if($_SERVER['REQUEST_METHOD'] == "PATCH" && !empty($data->id)){
+              
 
-                // Converts it into a PHP object
-                $data = json_decode($json);
-
-                $post->id = $_GET["id"];
+                $post->id = $data->id;
                 $post->title = $data->title;
                 $post->article = $data->article;
 
@@ -66,11 +63,11 @@
 
         if($_SERVER['REQUEST_METHOD'] == "POST"){
 
-            if(!empty($_GET["postId"])){
+            if(!empty($data->postId)){
 
-                $comment->postId = $_GET["postId"];
+                $comment->postId = $data->postId;
                 $comment->userId = $user->getUserIdFromToken($access_token);
-                $comment->comment = $_POST["comment"];
+                $comment->comment = $data->comment;
 
                 if($comment->addComment()){
 
@@ -89,13 +86,13 @@
 
 
               // make sure data is not empty
-            if( !empty($_POST["title"]) && !empty($_POST["userId"])){
-                $post->userId = $_POST["userId"];
-                $post->title = $_POST["title"];
+            if( !empty($data->title) && !empty($data->userId)){
+                $post->userId = $data->userId;
+                $post->title = $data->title;
 
-                if(!empty($_POST["article"])){
+                if(!empty($data->article)){
                     $post->postType = 0;
-                    $post->article = $_POST["article"];
+                    $post->article = $data->article;
                     
 
                     if($post->addPost()){
@@ -166,16 +163,16 @@
 
             $payload = array();
 
-            if(!empty($_GET["id"])){
-                $stmt = $post->readOnePost($_GET["id"]);
+            if(!empty($data->id)){
+                $stmt = $post->readOnePost($data->id);
 
                 if($stmt->rowCount() > 0 ){
                     extract($row = $stmt->fetch(PDO::FETCH_ASSOC));
                     if($postType == 1){
-                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"imageUrl"=>$home_url . "uploads/{$image}","authorId"=>$userId,"comments"=>$comment->readAllComments($_GET["id"]));
+                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"imageUrl"=>$home_url . "uploads/{$image}","authorId"=>$userId,"comments"=>$comment->readAllComments($data->id));
 
                     }else{
-                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"article"=>$article,"authorId"=>$userId,"comments"=>$comment->readAllComments($_GET["id"]));
+                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"article"=>$article,"authorId"=>$userId,"comments"=>$comment->readAllComments($data->id));
                     }
                 }else{
                      // tell the user
@@ -217,9 +214,9 @@
  
                 exit;
                 
-        }elseif (!empty($_GET["id"]) && $_SERVER['REQUEST_METHOD'] == "DELETE") {
+        }elseif (!empty($data->id) && $_SERVER['REQUEST_METHOD'] == "DELETE") {
             
-            $post->id = $_GET["id"];
+            $post->id = $data->id;
             if($post->deletePost()){
 
                 $payload = array("message"=>"Post successfully deleted");

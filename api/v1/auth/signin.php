@@ -18,20 +18,22 @@
         $user = new Users($conn);
         $utils = new Utils();
 
+        $data = json_decode(file_get_contents('php://input'));
+
        
         
         // make sure data is not empty
-        if( !empty($_POST["email"]) && !empty($_POST["password"]) ){
+        if( !empty($data->email) && !empty($data->password) ){
 
-            $user->email = $_POST["email"];
+            $user->email = $data->email;
             
             // check if email exists, also get user details using this emailExists() method
 	        $email_exists = $user->emailExists();
 
-            // password_verify($_POST['password'], $user->password)
+            // password_verify($data->password, $user->password)
 
             // validate login
-            if( $email_exists && password_verify($_POST['password'], $user->password)) {
+            if( $email_exists && password_verify($data->password, $user->password)) {
                
                 // set response code - 201 created
                 http_response_code(201);
