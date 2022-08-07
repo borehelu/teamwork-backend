@@ -89,7 +89,7 @@ class Users{
     }
 
     function emailExists(){
-        $query = "SELECT * FROM " .$this.tableName." WHERE email = :email";
+        $query = "SELECT * FROM users WHERE email = :email";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -107,15 +107,17 @@ class Users{
 
 			// assign values to object properties
 			$this->id = $row['id'];
-            $user->firstName = $row["firstName"];
-            $user->lastName = $row["lastName"];
-            $user->email = $row["email"];
-            $user->gender = $row["gender"];
-            $user->jobRole = $row["jobRole"];
-            $user->departmentId = $row["departmentId"];
-            $user->address = $row["address"];
-            $user->avatarUrl = $row["avatarUrl"];
-            $user->userRole = $row["userRole"];
+            $this->firstName = $row["firstName"];
+            $this->lastName = $row["lastName"];
+            $this->email = $row["email"];
+            $this->password = $row["password"];
+            $this->gender = $row["gender"];
+            $this->jobRole = $row["jobRole"];
+            $this->departmentId = $row["departmentId"];
+            $this->address = $row["address"];
+            $this->avatarUrl = $row["avatarUrl"];
+            $this->userRole = $row["userRole"];
+            $this->secret = $row["secret"];
 			
 
 			// return true because email exists in the database
