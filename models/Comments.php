@@ -61,74 +61,40 @@ class Comments{
 
     }
 
-    public function uploadImage(){
 
-        // specify valid image types / formats
-        $valid_formats = array("jpg", "png","gif");
-    
-        // specify maximum file size of file to be uploaded
-        $max_file_size = 1024*3000; // 3MB
-    
-        // directory where the files will be uploaded
-        $path = $_SERVER['DOCUMENT_ROOT']."/teamwork-backend/uploads/";
-    
-        // count or number of files
-        $count = 0;
-    
-        // if files were posted
-        if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
-    
-          // Loop $_FILES to execute all files
-          foreach ($_FILES['image']['name'] as $f => $name){
-    
-            if ($_FILES['image']['error'][$f] == 4) {
-              continue; // Skip file if any error found
-            }
-    
-            if ($_FILES['image']['error'][$f] == 0) {
-              if ($_FILES['image']['size'][$f] > $max_file_size) {
-                $message[] = "$name is too large!.";
-                continue; // Skip large files
-              }
-              elseif( ! in_array(pathinfo($name, PATHINFO_EXTENSION), $valid_formats) ){
-                $message[] = "$name is not a valid format";
-                continue; // Skip invalid file formats
-              }
-    
-              // No error found! Move uploaded files
-              else{
-
-                $this->image = $this->image.".".pathinfo($name, PATHINFO_EXTENSION);
-                if(move_uploaded_file($_FILES["image"]["tmp_name"][$f], $path.$this->image)){
-                  $count++; // Number of successfully uploaded file
-    
-
-                }
-              }
-            }
-          }
-
-          
-        }
         
 
 
-      }
+      
 
 
-      public function readAllPosts(){
+      public function readAllComments($postId){
         // query select all classes
-        $query = "SELECT *
-        FROM " . $this->tableName . " ORDER BY createdOn";
+        $query = "SELECT * FROM " . $this->tableName . " WHERE postId = :postId ORDER BY createdOn";
     
         // prepare query statement
         $stmt = $this->conn->prepare( $query );
+
+        $stmt->bindParam(":postId", $postId);
     
         // execute query
         $stmt->execute();
     
         // return values
-        return $stmt;
+        if($stmt->rowCount() > 0 ){
+            $comments = array();
+
+            while($row = $stmt->fetch("PDO::FETCH_ASSOC")){
+                extract($row);
+                 $comments[] = array("commentId"=>$id,"comment"=>$comment, "authorId"=>$userId, "createdOn"=>$createdOn);
+
+            }
+
+            return $comments;
+
+        }else{
+            return array();
+        }
         }
       
         public function readOnePost(){

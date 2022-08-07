@@ -145,10 +145,10 @@
                 if($stmt->rowCount() > 0 ){
                     extract($row = $stmt->fetch(PDO::FETCH_ASSOC));
                     if($postType == 1){
-                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"imageUrl"=>$home_url . "uploads/{$image}","authorId"=>$userId);
+                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"imageUrl"=>$home_url . "uploads/{$image}","authorId"=>$userId,"comments"=>$comments->readAllComments($_GET["id"]));
 
                     }else{
-                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"article"=>$article,"authorId"=>$userId);
+                        $payload[] = array("id"=>$id,"createdOn"=>$createdOn,"title"=>$title,"article"=>$article,"authorId"=>$userId,"comments"=>$comments->readAllComments($_GET["id"]));
                     }
                 }
 
