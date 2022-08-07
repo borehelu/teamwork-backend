@@ -6,10 +6,11 @@
         header("Access-Control-Max-Age: 3600");
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         
-        include_once '../../config/Database.php';
-        include_once '../../models/Users.php';
-        include_once '../../models/utils.php';
-        include_once '../../libs/password/passwordLib.php';
+        include_once '../../config/core.php';
+        include_once '../../../config/Database.php';
+        include_once '../../../models/Users.php';
+        include_once '../../../models/utils.php';
+        include_once '../../../libs/password/passwordLib.php';
 
         $database = new Database();
         $conn = $database->connect();
