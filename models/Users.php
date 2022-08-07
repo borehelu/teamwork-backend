@@ -3,7 +3,7 @@
 class Users{
 
     
-    public $userid;
+    public $id;
     public $firstName;
     public $lastName;
     public $email;
