@@ -35,7 +35,7 @@
                     // set response code - 201 created
                     http_response_code(201);
 
-                    $payload = array("message"=>"Article successfully posted","articleId"=>$conn->lastInsertId(),"createdOn"=>$post->createdOn,"title"=>$post->title);
+                    $payload = array("message"=>"Article successfully posted","articleId"=>$conn->lastInsertId(),"createdOn"=>$post->createdOn,"title"=>$post->title,"article"=>$post->article);
             
                     // tell the user
                     echo json_encode(array("status"=>"success","data" => $payload));
@@ -61,7 +61,7 @@
                           // set response code - 201 created
                           http_response_code(201);
 
-                          $payload = array("message"=>"Gif successfully posted","gifId"=>$conn->lastInsertId(),"createdOn"=>$post->createdOn,"title"=>$post->title);
+                          $payload = array("message"=>"Gif successfully posted","gifId"=>$conn->lastInsertId(),"createdOn"=>$post->createdOn,"title"=>$post->title,"imageUrl"=>$home_url . "uploads/{$post->image}");
                   
                           // tell the user
                           echo json_encode(array("status"=>"success","data" => $payload));
