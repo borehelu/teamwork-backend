@@ -175,6 +175,31 @@ class Posts{
                 }
             }
 
+            function updatePost(){
+
+                // update query
+                $query = "UPDATE " . $this->tableName . "
+                    SET title = :title,
+                        article = :article
+                    WHERE  id = :id";
+            
+                // prepare query statement
+                $stmt = $this->conn->prepare($query);
+            
+                // bind values
+                $stmt->bindParam(':title', $this->title);
+                $stmt->bindParam(':article', $this->article);
+                $stmt->bindParam(':id', $this->id);
+            
+                // execute the query
+                if($stmt->execute()){
+                  return true;
+                }else{
+                  return false;
+                }
+
+            }
+
       
 
     

@@ -36,6 +36,33 @@
 
         if($access_token != null){
 
+            if($_SERVER['REQUEST_METHOD'] == "PATCH" && !empty($_GET["id"])){
+                // Takes raw data from the request
+                $json = file_get_contents('php://input');
+
+                // Converts it into a PHP object
+                $data = json_decode($json);
+
+                $post->id = $_GET["id"];
+                $post->title = $data->title;
+                $post->article = $data->article;
+
+                if($post->updatePost()){
+                    $payload = array("message"=>"Post updated successfully");
+                    echo json_encode(array("status"=>"success","data" => $payload));
+                    exit;
+
+
+                }else{
+
+                    $payload = array("message"=>"Error updating post");
+                    echo json_encode(array("status"=>"error","data" => $payload));
+                    exit;
+
+                }
+
+            }
+
 
         if($_SERVER['REQUEST_METHOD'] == "POST"){
 
