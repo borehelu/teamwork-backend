@@ -6,7 +6,7 @@
         header("Access-Control-Max-Age: 3600");
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         
-        include_once '../../config/core.php';
+        include_once '../../../config/core.php';
         include_once '../../../config/Database.php';
         include_once '../../../models/Users.php';
         include_once '../../../models/utils.php';
@@ -20,6 +20,8 @@
 
         $data = json_decode(file_get_contents('php://input'));
 
+        
+
         if($_SERVER['REQUEST_METHOD'] == "POST"){
 
              // make sure data is not empty
@@ -32,7 +34,6 @@
             !empty($data->jobRole) &&
             !empty($data->departmentId) &&
             !empty($data->address) &&
-            !empty($data->avatarUrl) &&
             !empty($data->userRole)
             
         ){

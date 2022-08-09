@@ -158,13 +158,14 @@ class Posts{
             function deletePost(){
 
                 // delete query
-                $query = "DELETE FROM " . $this->tableName . " WHERE id = ?";
+                $query = "DELETE FROM " . $this->tableName . " WHERE id = ? AND userId = ?";
         
                 // prepare query statement
                 $stmt = $this->conn->prepare($query);
         
                 // bind record id
                 $stmt->bindParam(1, $this->id);
+                $stmt->bindParam(2, $this->userId);
                 
         
                 // execute the query
