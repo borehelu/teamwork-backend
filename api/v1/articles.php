@@ -33,6 +33,27 @@
         $data = json_decode(file_get_contents('php://input'));
       
 
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+
+        switch ($requestMethod) {
+            case 'POST':
+                
+                break;
+            case 'GET':
+            
+                break;
+            case 'PATCH':
+            
+                break;
+            case 'DELETE':
+        
+                break;
+            
+            default:
+                
+                break;
+        }
+
 
 
         if($access_token != null){
@@ -86,9 +107,9 @@
 
 
               // make sure data is not empty
-            if( (!empty($data->title) && !empty($data->userId)) || ((!empty($_POST["title"]) && !empty($_POST["userId"])))){
+            if( !empty($data->title) || !empty($_POST["title"]) ){
               
-                $post->userId = (!empty($data->userId))? $data->userId: $_POST['userId'];
+                $post->userId = $user->getUserIdFromToken($access_token);
                 $post->title = (!empty($data->title))? $data->title: $_POST['title'];
 
                 if(!empty($data->article) || !empty($_POST["article"]) ){
@@ -219,6 +240,8 @@
         }elseif (!empty($data->id) && $_SERVER['REQUEST_METHOD'] == "DELETE") {
             
             $post->id = $data->id;
+            $post->userId = $user->getUserIdFromToken($access_token);
+
             if($post->deletePost()){
 
                 $payload = array("message"=>"Post successfully deleted");
